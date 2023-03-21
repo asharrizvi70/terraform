@@ -80,6 +80,12 @@ module "funtionapp"{
 }
 module "frontdoor" {
   source = "./modules/azure_front_door"
+  name = "exampleFrontendEndpoint1"
+  rgname = "dev-rg"
+  backend_name = "exampleBackend"
+  backend_hostname = "www.bing.com"
+  frontend_name = "exampleFrontendEndpoint1"
+  frontend_hostname = "exampleFrontendEndpoint1.azurefd.net"
 
 }
 

@@ -1,6 +1,6 @@
 resource "azurerm_frontdoor" "example" {
-  name                = "exampleFrontendEndpoint1"
-  resource_group_name = "dev-rg"
+  name                = var.name
+  resource_group_name = var.rgname
 
   routing_rule {
     name               = "exampleRoutingRule1"
@@ -22,10 +22,10 @@ resource "azurerm_frontdoor" "example" {
   }
 
   backend_pool {
-    name = "exampleBackendBing"
+    name = var.backend_name
     backend {
-      host_header = "www.bing.com"
-      address     = "www.bing.com"
+      host_header = var.backend_hostname
+      address     = var.backend_hostname
       http_port   = 80
       https_port  = 443
     }
@@ -35,7 +35,7 @@ resource "azurerm_frontdoor" "example" {
   }
 
   frontend_endpoint {
-    name      = "exampleFrontendEndpoint1"
-    host_name = "exampleFrontendEndpoint1.azurefd.net"
+    name      = var.frontend_name
+    host_name = var.frontend_hostname
   }
 }
