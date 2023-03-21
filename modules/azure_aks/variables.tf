@@ -18,3 +18,8 @@ variable "aksname" {
   type    = string
   default = "RG-git-DEMO-AKS"
 }
+
+variable "subnet_id" {
+  type    = string
+  default = ""
+}

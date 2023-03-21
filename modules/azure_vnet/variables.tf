@@ -1,24 +1,20 @@
 //------------------------------------General Properties------------------------------------\\
 variable "rgname" {
   type    = string
+  default = "RG-git-DEMO-LINUXVM"
 }
 
-variable "name" {
+variable "location" {
   type    = string
+  default = "West US"
 }
 
-variable "backend_name" {
+variable "vnetname" {
   type    = string
+  default = ""
 }
 
-variable "backend_hostname" {
+variable "subnetname" {
   type    = string
-}
-
-variable "frontend_name" {
-  type    = string
-}
-
-variable "frontend_hostname" {
-  type    = string
+  default = ""
 }

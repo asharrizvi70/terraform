@@ -1,9 +1,26 @@
+terraform {
+  backend "azurerm" {
+    storage_account_name = "examplestorage"
+    container_name       = "terraform-state"
+    key                  = "terraform.tfstate"
+    resource_group_name  = "dev-rg"
+  }
+}
+
 # #provisioning resource group
 # module "dev_resource_group" {
 #   source = "./modules/azure_resource_group"
 #   rgname   = "dev-rg"
 #   location = "westindia"
 # }
+
+module "vnet"{
+  source = "./modules/azure_vnet"
+  rgname = "dev-rg"
+  location = "westindia"
+  vnetname = "dev-vnet"
+  subnetname = "dev-subnet"  
+}
 
 module "asp-plan"{
   source = "./modules/azure_app_service_plan"
@@ -63,6 +80,12 @@ module "funtionapp"{
 }
 module "frontdoor" {
   source = "./modules/azure_front_door"
+  name = "exampleFrontendEndpoint1"
+  rgname = "dev-rg"
+  backend_name = "exampleBackend"
+  backend_hostname = "www.bing.com"
+  frontend_name = "exampleFrontendEndpoint1"
+  frontend_hostname = "exampleFrontendEndpoint1.azurefd.net"
 
 }
 
@@ -71,6 +94,8 @@ module "aks"{
   rgname = "dev-rg"
   vnetname = "dev-vnet"
   location = "westindia"
+  aksname = "dev-aks"
+  subnet_id = module.vnet.vnet_subnet_id
   aksname = "dev-aks"  
 }
 
