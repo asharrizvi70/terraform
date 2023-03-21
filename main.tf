@@ -96,4 +96,21 @@ module "aks"{
   location = "westindia"
   aksname = "dev-aks"
   subnet_id = module.vnet.vnet_subnet_id
+  aksname = "dev-aks"  
+}
+
+module "ad_user1" {
+  source             = "./azure_aduser"
+  user_principal_name = "user1@yourdomain.com"
+  display_name       = "User One"
+  mail_nickname      = "user1"
+  password           = "P@ssw0rd!"
+}
+
+module "role_assignment_1" {
+  source = "./modules/azure_azurerm_role_definition"
+
+  role_scope            = "/subscriptions/<sub_id>/resourceGroups/<rg_name>"
+  principal_id          = ["<principal_id_1>"]
+  role_definition_name  = "Contributor"
 }
