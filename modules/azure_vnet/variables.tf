@@ -4,22 +4,17 @@ variable "rgname" {
   default = "RG-git-DEMO-LINUXVM"
 }
 
-variable "vnetname" {
-  type    = string
-  default = "RG-git-DEMO-VNET"
-}
-
 variable "location" {
   type    = string
   default = "West US"
 }
 
-variable "aksname" {
+variable "vnetname" {
   type    = string
-  default = "RG-git-DEMO-AKS"
+  default = ""
 }
 
-variable "subnet_id" {
+variable "subnetname" {
   type    = string
   default = ""
 }
