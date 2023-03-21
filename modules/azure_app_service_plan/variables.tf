@@ -17,8 +17,3 @@ variable "skusize" {
   type    = string
   default = "S1"
 }
-
-variable "skutier" {
-  type    = string
-  default = "Standard"
-}

@@ -17,3 +17,13 @@ variable "aspid" {
   type = string
   default = ""
 }
+
+variable "storageaccountname" {
+  type = string
+  default = ""
+}
+
+variable "storageaccountaccesskey" {
+  type = string
+  default = ""
+}

@@ -11,7 +11,6 @@ module "asp-plan"{
   location = "westindia"
   aspname = "dcaas-dev-asp"
   skusize = "S1"
-  skutier = "Standard"
 }
 module "app" {
   source = "./modules/azure_app_service"
@@ -53,14 +52,24 @@ module "dev_apim" {
 }
 
 
-# module "funtionapp"{
-#   source = "./modules/azure_function_app"
-#   rgname = "dev-rg"
-#   location = "westindia"
-#   appname = "appdevqumulus"
-#   aspid   = module.asp-plan.asp_id
-# }
+module "funtionapp"{
+  source = "./modules/azure_function_app"
+  rgname = "dev-rg"
+  location = "westindia"
+  appname = "appdevqumulus"
+  aspid   = module.asp-plan.asp_id
+  storageaccountname = module.storage.storageaccountname
+  storageaccountaccesskey = module.storage.storageaccountaccesskey
+}
 module "frontdoor" {
   source = "./modules/azure_front_door"
 
+}
+
+module "aks"{
+  source = "./modules/azure_aks"
+  rgname = "dev-rg"
+  vnetname = "dev-vnet"
+  location = "westindia"
+  aksname = "dev-aks"  
 }
