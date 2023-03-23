@@ -23,3 +23,32 @@ variable "subnet_id" {
   type    = string
   default = ""
 }
+variable "default_node_pool_name" {
+  type    = string
+  default = "default"
+}
+
+variable "default_node_pool_node_count" {
+  type    = number
+  default = 1
+}
+
+variable "default_node_pool_vm_size" {
+  type    = string
+  default = "Standard_DS2_v2"
+}
+variable "default_node_pool_os_disk_size_gb" {
+  type    = number
+  default = 30
+}
+
+variable "node_pools" {
+  type    = list(object({
+    name            = string
+    node_count      = number
+    vm_size         = string
+    vnet_subnet_id  = string
+    os_disk_size_gb = number
+  }))
+  default = []
+}
