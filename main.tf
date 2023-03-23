@@ -124,7 +124,7 @@ module "postgresql_server-dev" {
   location            = "eastus"
   server_name         = "postgresql_server-dev"
   storage_mb          = 1024
-
+  sku_name            = "GP_Gen5_2"
   administrator_login          = "dbadmin"
   administrator_login_password = "dbadmin@1212"
 }
@@ -135,7 +135,7 @@ module "postgresql_server-Integration" {
   location            = "eastus"
   server_name         = "postgresql_server-integration"
   storage_mb          = 1024
-
+  sku_name            = "GP_Gen5_2"
   administrator_login          = "dbadmin"
   administrator_login_password = "dbadmin@1212"
 }
@@ -146,7 +146,7 @@ module "postgresql_server-production" {
   location            = "eastus"
   server_name         = "postgresql_server-production"
   storage_mb          = 2048
-
+  sku_name            = "GP_Gen5_2"
   administrator_login          = "dbadmin"
   administrator_login_password = "dbadmin@1212"
 }
