@@ -123,7 +123,7 @@ module "storage" {
 }
 
 module "postgresql_server" {
-  source              = "./postgresql_server"
+  source              = "./modules/azure_postgresql_server"
   resource_group_name = "Rg-Dev"
   location            = "eastus"
   server_name         = ""
