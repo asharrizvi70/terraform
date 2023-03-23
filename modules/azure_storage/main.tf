@@ -1,5 +1,6 @@
 resource "azurerm_storage_account" "example" {
-  name                     = var.storagename
+  count = length(var.storage_account_names)
+  name                      = var.storage_account_names[count.index]
   resource_group_name      = var.rgname
   location                 = var.location
   account_tier             = var.accounttype
