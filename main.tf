@@ -120,7 +120,7 @@ module "storage" {
 
 module "postgresql_server-dev" {
   source              = "./modules/azure_postgresql_server"
-  rgname = module.Rg-Dev.resource_group_name
+  resource_group_name = module.Rg-Dev.resource_group_name
   location            = "eastus"
   server_name         = "postgresql-server-dev"
   storage_mb          = 2048
@@ -131,7 +131,7 @@ module "postgresql_server-dev" {
 
 module "postgresql_server-Integration" {
   source              = "./modules/azure_postgresql_server"
-  rgname = module.Rg-Integration.resource_group_name
+  resource_group_name = module.Rg-Integration.resource_group_name
   location            = "eastus"
   server_name         = "postgresql-server-integration"
   storage_mb          = 2048
@@ -142,7 +142,7 @@ module "postgresql_server-Integration" {
 
 module "postgresql_server-production" {
   source              = "./modules/azure_postgresql_server"
-  rgname = module.Rg-Production.resource_group_name
+  resource_group_name = module.Rg-Production.resource_group_name
   location            = "eastus"
   server_name         = "postgresql-server-production"
   storage_mb          = 2048
