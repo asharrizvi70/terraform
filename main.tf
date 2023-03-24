@@ -29,7 +29,7 @@ module "Rg-Production" {
 
 module "vnet-dev"{
   source = "./modules/azure_vnet"
-  rgname = "Rg-Dev"
+  rgname = module.Rg-Dev.resource_group_name
   location = "eastus"
   vnetname = "vnet-dev"
   subnetname = "subnet-dev"
@@ -39,7 +39,7 @@ module "vnet-dev"{
 
 module "vnet-Integration"{
   source = "./modules/azure_vnet"
-  rgname = "Rg-Integration"
+  rgname = module.Rg-Integration.resource_group_name
   location = "eastus"
   vnetname = "vnet-Integration"
   subnetname = "subnet-Integration"
@@ -49,7 +49,7 @@ module "vnet-Integration"{
 
 module "vnet-Production"{
   source = "./modules/azure_vnet"
-  rgname = "Rg-Production"
+  rgname = module.Rg-Production.resource_group_name
   location = "eastus"
   vnetname = "vnet-Production"
   subnetname = "subnet-Production"
@@ -60,7 +60,7 @@ module "vnet-Production"{
 
 module "aks-dev"{
   source = "./modules/azure_aks"
-  rgname = "Rg-Dev"
+  rgname = module.Rg-Dev.resource_group_name
   vnetname = "vnet-dev"
   location = "eastus"
   aksname = "development"
@@ -69,7 +69,7 @@ module "aks-dev"{
 
 module "aks-Integration"{
   source = "./modules/azure_aks"
-  rgname = "Rg-Integration"
+  rgname = module.Rg-Integration.resource_group_name
   vnetname = "vnet-Integration"
   location = "eastus"
   aksname = "integration"
@@ -82,7 +82,7 @@ module "aks-Integration"{
 
 module "aks-Production"{
   source = "./modules/azure_aks"
-  rgname = "Rg-Production"
+  rgname = module.Rg-Production.resource_group_name
   vnetname = "vnet-Production"
   location = "eastus"
   aksname = "production"
@@ -104,15 +104,15 @@ module "aks-Production"{
 
 module "storage" {
   source = "./modules/azure_storage"
-  rgname = "Rg-Dev"
+  rgname = module.Rg-Dev.resource_group_name
   location = "eastus"
   storage_account_names = [
-    "temp-public-share",
-    "metabob-production-us-argo-workflow-artifacts",
-    "metabob-migration-temp-bucket",
-    "metabob-internal-data-store",
-    "metabob-development-us-ml-pipeline-artifacts",
-    "artifacts.metabob.appspot.coma"
+    "temppublicshare",
+    "prodmetabobartifacts",
+    "metabobmigrationtemp",
+    "metabobintrnldatastore",
+    "devmetabobusmlartifacts",
+    "artifactsmetabobapps"
   ]
   accounttype = "Standard"
   replicationtype = "LRS"
@@ -120,10 +120,10 @@ module "storage" {
 
 module "postgresql_server-dev" {
   source              = "./modules/azure_postgresql_server"
-  resource_group_name = "Rg-Dev"
+  rgname = module.Rg-Dev.resource_group_name
   location            = "eastus"
-  server_name         = "postgresql_server-dev"
-  storage_mb          = 1024
+  server_name         = "postgresql-server-dev"
+  storage_mb          = 2048
   sku_name            = "GP_Gen5_2"
   administrator_login          = "dbadmin"
   administrator_login_password = "dbadmin@1212"
@@ -131,10 +131,10 @@ module "postgresql_server-dev" {
 
 module "postgresql_server-Integration" {
   source              = "./modules/azure_postgresql_server"
-  resource_group_name = "Rg-Integration"
+  rgname = module.Rg-Integration.resource_group_name
   location            = "eastus"
-  server_name         = "postgresql_server-integration"
-  storage_mb          = 1024
+  server_name         = "postgresql-server-integration"
+  storage_mb          = 2048
   sku_name            = "GP_Gen5_2"
   administrator_login          = "dbadmin"
   administrator_login_password = "dbadmin@1212"
@@ -142,9 +142,9 @@ module "postgresql_server-Integration" {
 
 module "postgresql_server-production" {
   source              = "./modules/azure_postgresql_server"
-  resource_group_name = "Rg-Production"
+  rgname = module.Rg-Production.resource_group_name
   location            = "eastus"
-  server_name         = "postgresql_server-production"
+  server_name         = "postgresql-server-production"
   storage_mb          = 2048
   sku_name            = "GP_Gen5_2"
   administrator_login          = "dbadmin"
