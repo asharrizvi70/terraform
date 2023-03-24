@@ -61,7 +61,7 @@ module "vnet-Production"{
 module "aks-dev"{
   source = "./modules/azure_aks"
   rgname = module.Rg-Dev.resource_group_name
-  vnetname = "vnet-dev"
+  vnetname = module.vnet-dev.vnet_name
   location = "eastus"
   aksname = "development"
   subnet_id = module.vnet-dev.vnet_subnet_id
@@ -70,7 +70,7 @@ module "aks-dev"{
 module "aks-Integration"{
   source = "./modules/azure_aks"
   rgname = module.Rg-Integration.resource_group_name
-  vnetname = "vnet-Integration"
+  vnetname = module.vnet-Integration.vnet_name
   location = "eastus"
   aksname = "integration"
   default_node_pool_name            = "default-node-pool"
@@ -83,7 +83,7 @@ module "aks-Integration"{
 module "aks-Production"{
   source = "./modules/azure_aks"
   rgname = module.Rg-Production.resource_group_name
-  vnetname = "vnet-Production"
+  vnetname = module.vnet-Production.vnet_name
   location = "eastus"
   aksname = "production"
   default_node_pool_name            = "default-node-pool"
@@ -91,7 +91,7 @@ module "aks-Production"{
   default_node_pool_vm_size         = "Standard_D4s_v3"
   default_node_pool_os_disk_size_gb = 50
   subnet_id = module.vnet-Production.vnet_subnet_id
-  node_pools = [
+  additional_node_pools = [
     {
       name            = "nap-e2-standard"
       node_count      = 3
@@ -126,7 +126,7 @@ module "postgresql_server-dev" {
   storage_mb          = 2048
   sku_name            = "GP_Gen5_2"
   administrator_login          = "dbadmin"
-  administrator_login_password = "dbadmin@1212"
+  administrator_login_password = "f1TTh4vs&F2SPH6q3l"
 }
 
 module "postgresql_server-Integration" {
@@ -137,7 +137,7 @@ module "postgresql_server-Integration" {
   storage_mb          = 2048
   sku_name            = "GP_Gen5_2"
   administrator_login          = "dbadmin"
-  administrator_login_password = "dbadmin@1212"
+  administrator_login_password = "%M6dXUZ5sU1N872wdW"
 }
 
 module "postgresql_server-production" {
@@ -148,7 +148,7 @@ module "postgresql_server-production" {
   storage_mb          = 2048
   sku_name            = "GP_Gen5_2"
   administrator_login          = "dbadmin"
-  administrator_login_password = "dbadmin@1212"
+  administrator_login_password = "8Nb2IDf*9Uj&k4nXlH"
 }
 
 # module "ad_user1" {

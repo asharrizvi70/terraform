@@ -42,13 +42,13 @@ variable "default_node_pool_os_disk_size_gb" {
   default = 30
 }
 
-variable "node_pools" {
+variable "additional_node_pools" {
   type    = list(object({
-    name            = string
-    node_count      = number
-    vm_size         = string
-    vnet_subnet_id  = string
-    os_disk_size_gb = number
+    name                = string
+    node_count          = number
+    vm_size             = string
+    os_disk_size_gb     = number
+    vnet_subnet_id      = string
   }))
   default = []
 }

@@ -18,15 +18,16 @@ resource "azurerm_kubernetes_cluster" "aks" {
     vnet_subnet_id  = var.subnet_id
     os_disk_size_gb = var.default_node_pool_os_disk_size_gb
   }
-  # dynamic "node_pool" {
-  #   for_each = var.node_pools
+}
 
-  #   content {
-  #     name            = node_pool.value.name
-  #     node_count      = node_pool.value.node_count
-  #     vm_size         = node_pool.value.vm_size
-  #     vnet_subnet_id  = node_pool.value.vnet_subnet_id
-  #     os_disk_size_gb = node_pool.value.os_disk_size_gb
-  #   }
-  # }
+# Create additional node pools if specified
+resource "azurerm_kubernetes_cluster_node_pool" "additional_node_pools" {
+  count = length(var.additional_node_pools)
+
+  name                = var.additional_node_pools[count.index].name
+  kubernetes_cluster_id = azurerm_kubernetes_cluster.aks.id
+  node_count          = var.additional_node_pools[count.index].node_count
+  vm_size             = var.additional_node_pools[count.index].vm_size
+  vnet_subnet_id      = var.additional_node_pools[count.index].vnet_subnet_id
+  os_disk_size_gb     = var.additional_node_pools[count.index].os_disk_size_gb
 }
