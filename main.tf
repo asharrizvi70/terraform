@@ -32,9 +32,12 @@ module "vnet-dev"{
   rgname = module.Rg-Dev.resource_group_name
   location = "eastus"
   vnetname = "vnet-dev"
-  subnetname = "subnet-dev"
   address_space = [ "10.8.0.0/14" ]
-  address_prefixes = [ "10.9.0.0/17","10.10.0.0/17","10.11.0.0/17" ]
+  subnets = {
+    "subnet1-dev" = "10.9.0.0/17"
+    "subnet2-dev" = "10.10.0.0/17"
+    "subnet3-dev" = "10.11.0.0/17"
+  }
 }
 
 module "vnet-Integration"{
@@ -42,9 +45,12 @@ module "vnet-Integration"{
   rgname = module.Rg-Integration.resource_group_name
   location = "eastus"
   vnetname = "vnet-Integration"
-  subnetname = "subnet-Integration"
   address_space = [ "10.0.0.0/14" ]
-  address_prefixes = [ "10.0.0.0/17","10.1.0.0/17","10.2.0.0/17" ]
+  subnets = {
+    "subnet1-integration" = "10.0.0.0/17"
+    "subnet2-integration" = "10.1.0.0/17"
+    "subnet3-integration" = "10.2.0.0/17"
+  }
 }
 
 module "vnet-Production"{
@@ -52,9 +58,12 @@ module "vnet-Production"{
   rgname = module.Rg-Production.resource_group_name
   location = "eastus"
   vnetname = "vnet-Production"
-  subnetname = "subnet-Production"
   address_space = [ "10.4.0.0/14" ]
-  address_prefixes = [ "10.4.0.0/17","10.5.0.0/17","10.6.0.0/17" ]
+  subnets = {
+    "subnet1-production" = "10.4.0.0/17"
+    "subnet2-production" = "10.5.0.0/17"
+    "subnet3-production" = "10.6.0.0/17"
+  }
 }
 
 
@@ -64,7 +73,7 @@ module "aks-dev"{
   vnetname = module.vnet-dev.vnet_name
   location = "eastus"
   aksname = "development"
-  subnet_id = module.vnet-dev.vnet_subnet_id
+  subnet_id = lookup(module.vnet-dev.subnet_ids, "subnet1-dev")
 }
 
 module "aks-Integration"{
@@ -77,7 +86,7 @@ module "aks-Integration"{
   default_node_pool_node_count      = 3
   default_node_pool_vm_size         = "Standard_D4s_v3"
   default_node_pool_os_disk_size_gb = 50
-  subnet_id = module.vnet-Integration.vnet_subnet_id
+  subnet_id = lookup(module.vnet-Integration.subnet_ids, "subnet1-integration")
 }
 
 module "aks-Production"{
@@ -90,13 +99,13 @@ module "aks-Production"{
   default_node_pool_node_count      = 2
   default_node_pool_vm_size         = "Standard_D4s_v3"
   default_node_pool_os_disk_size_gb = 50
-  subnet_id = module.vnet-Production.vnet_subnet_id
+  subnet_id = lookup(module.vnet-Production.subnet_ids, "subnet1-production")
   additional_node_pools = [
     {
       name            = "nap-e2-standard"
       node_count      = 3
       vm_size         = "Standard_D2s_v3"
-      vnet_subnet_id  = module.vnet-Production.vnet_subnet_id
+      vnet_subnet_id  = lookup(module.vnet-Production.subnet_ids, "subnet1-production")
       os_disk_size_gb = 128
     }
   ]

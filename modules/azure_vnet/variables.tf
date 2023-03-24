@@ -14,15 +14,11 @@ variable "vnetname" {
   default = ""
 }
 
-variable "subnetname" {
-  type    = string
-  default = ""
-}
-
 variable "address_space" {
   type = list(string)
 }
 
-variable "address_prefixes" {
-  type = list(string)
+variable "subnets" {
+  description = "Map of subnet names and their respective CIDR ranges"
+  type = map
 }
