@@ -161,7 +161,7 @@ module "postgresql_server-production" {
 }
 
 module "azuread_users" {
-  source = "./azuread_user"
+  source = "./modules/azure_aduser"
 
   users = [
     {
@@ -209,24 +209,19 @@ module "azuread_users" {
   ]
 }
 
-module "role_assignments" {
-  source = "./azurerm_role_assignment"
+variable "user_names" {
+  type    = list(string)
+  default = ["Avinash Gopal","Ben Reaves","Abdur-Rahman Janhangeer","Anush Krishna","Haoxuan","Jun Kai Lo"]
+}
 
+module "role_assignments" {
+  source = "./modules/azure_azurerm_role_definition"
+  count = length(var.user_names)
   users = [
     {
-      name = "User1"
-      role_definition_name = "Contributor"
-      principal_id = "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
-    },
-    {
-      name = "User2"
+      name = element(var.user_names, count.index)
       role_definition_name = "Reader"
-      principal_id = "yyyyyyyy-yyyy-yyyy-yyyy-yyyyyyyyyyyy"
-    },
-    {
-      name = "User3"
-      role_definition_name = "Owner"
-      principal_id = "zzzzzzzz-zzzz-zzzz-zzzz-zzzzzzzzzzzz"
-    },
+      principal_id = lookup(module.azuread_users.user_ids, element(var.user_names, count.index))
+    }
   ]
 }

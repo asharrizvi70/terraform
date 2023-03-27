@@ -1,3 +1,3 @@
 output "user_ids" {
-  value = [for user in azuread_user.users : user.object_id]
+  value = {for user in azuread_user.users : user.display_name => user.object_id}
 }
