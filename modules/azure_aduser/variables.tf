@@ -1,15 +1,9 @@
-variable "user_principal_name" {
-  type = string
-}
-
-variable "display_name" {
-  type = string
-}
-
-variable "mail_nickname" {
-  type = string
-}
-
-variable "password" {
-  type = string
+variable "users" {
+  type = list(object({
+    username = string
+    password = string
+    display_name = string
+    mail_nickname = string
+    user_principal_name = string
+  }))
 }

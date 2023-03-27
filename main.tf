@@ -132,7 +132,7 @@ module "postgresql_server-dev" {
   resource_group_name = module.Rg-Dev.resource_group_name
   location            = "eastus"
   server_name         = "postgresql-server-dev"
-  storage_mb          = 2048
+  storage_mb          = 5120
   sku_name            = "GP_Gen5_2"
   administrator_login          = "dbadmin"
   administrator_login_password = "f1TTh4vs&F2SPH6q3l"
@@ -143,7 +143,7 @@ module "postgresql_server-Integration" {
   resource_group_name = module.Rg-Integration.resource_group_name
   location            = "eastus"
   server_name         = "postgresql-server-integration"
-  storage_mb          = 2048
+  storage_mb          = 5120
   sku_name            = "GP_Gen5_2"
   administrator_login          = "dbadmin"
   administrator_login_password = "%M6dXUZ5sU1N872wdW"
@@ -154,24 +154,74 @@ module "postgresql_server-production" {
   resource_group_name = module.Rg-Production.resource_group_name
   location            = "eastus"
   server_name         = "postgresql-server-production"
-  storage_mb          = 2048
+  storage_mb          = 5120
   sku_name            = "GP_Gen5_2"
   administrator_login          = "dbadmin"
   administrator_login_password = "8Nb2IDf*9Uj&k4nXlH"
 }
 
-# module "ad_user1" {
-#   source             = "./azure_aduser"
-#   user_principal_name = "user1@yourdomain.com"
-#   display_name       = "User One"
-#   mail_nickname      = "user1"
-#   password           = "P@ssw0rd!"
-# }
+module "azuread_users" {
+  source = "./modules/azure_aduser"
 
-# module "role_assignment_1" {
-#   source = "./modules/azure_azurerm_role_definition"
+  users = [
+    {
+      username = "avi"
+      password = "P@ssw0rd123"
+      display_name = "Avinash Gopal"
+      mail_nickname = "avi"
+      user_principal_name = "avi@metabob.com"
+    },
+    {
+      username = "ben"
+      password = "P@ssw0rd456"
+      display_name = "Ben Reaves"
+      mail_nickname = "ben"
+      user_principal_name = "ben@metabob.com"
+    },
+    {
+      username = "arj"
+      password = "P@ssw0rd789"
+      display_name = "Abdur-Rahman Janhangeer"
+      mail_nickname = "arj"
+      user_principal_name = "arj@metabob.com"
+    },
+    {
+      username = "anush"
+      password = "P@ssw0rd456"
+      display_name = "Anush Krishna"
+      mail_nickname = "anush"
+      user_principal_name = "anush@metabob.com"
+    },
+    {
+      username = "haoxuan"
+      password = "P@ssw0rd789"
+      display_name = "Haoxuan"
+      mail_nickname = "haoxuan"
+      user_principal_name = "haoxuan@metabob.com"
+    },
+        {
+      username = "junkai"
+      password = "P@ssw0rd789"
+      display_name = "Jun Kai Lo"
+      mail_nickname = "junkai"
+      user_principal_name = "junkai@metabob.com"
+    }
+  ]
+}
 
-#   role_scope            = "/subscriptions/<sub_id>/resourceGroups/<rg_name>"
-#   principal_id          = ["<principal_id_1>"]
-#   role_definition_name  = "Contributor"
-# }
+variable "user_names" {
+  type    = list(string)
+  default = ["Avinash Gopal","Ben Reaves","Abdur-Rahman Janhangeer","Anush Krishna","Haoxuan","Jun Kai Lo"]
+}
+
+module "role_assignments" {
+  source = "./modules/azure_azurerm_role_definition"
+  count = length(var.user_names)
+  users = [
+    {
+      name = element(var.user_names, count.index)
+      role_definition_name = "Reader"
+      principal_id = lookup(module.azuread_users.user_ids, element(var.user_names, count.index))
+    }
+  ]
+}
