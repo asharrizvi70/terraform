@@ -132,7 +132,7 @@ module "postgresql_server-dev" {
   resource_group_name = module.Rg-Dev.resource_group_name
   location            = "eastus"
   server_name         = "postgresql-server-dev"
-  storage_mb          = 2048
+  storage_mb          = 5120
   sku_name            = "GP_Gen5_2"
   administrator_login          = "dbadmin"
   administrator_login_password = "f1TTh4vs&F2SPH6q3l"
@@ -143,7 +143,7 @@ module "postgresql_server-Integration" {
   resource_group_name = module.Rg-Integration.resource_group_name
   location            = "eastus"
   server_name         = "postgresql-server-integration"
-  storage_mb          = 2048
+  storage_mb          = 5120
   sku_name            = "GP_Gen5_2"
   administrator_login          = "dbadmin"
   administrator_login_password = "%M6dXUZ5sU1N872wdW"
@@ -154,19 +154,39 @@ module "postgresql_server-production" {
   resource_group_name = module.Rg-Production.resource_group_name
   location            = "eastus"
   server_name         = "postgresql-server-production"
-  storage_mb          = 2048
+  storage_mb          = 5120
   sku_name            = "GP_Gen5_2"
   administrator_login          = "dbadmin"
   administrator_login_password = "8Nb2IDf*9Uj&k4nXlH"
 }
 
-# module "ad_user1" {
-#   source             = "./azure_aduser"
-#   user_principal_name = "user1@yourdomain.com"
-#   display_name       = "User One"
-#   mail_nickname      = "user1"
-#   password           = "P@ssw0rd!"
-# }
+module "azuread_users" {
+  source = "./azuread_user"
+
+  users = [
+    {
+      username = "user1"
+      password = "P@ssw0rd123"
+      display_name = "User One"
+      mail_nickname = "user1"
+      user_principal_name = "user1@mydomain.com"
+    },
+    {
+      username = "user2"
+      password = "P@ssw0rd456"
+      display_name = "User Two"
+      mail_nickname = "user2"
+      user_principal_name = "user2@mydomain.com"
+    },
+    {
+      username = "user3"
+      password = "P@ssw0rd789"
+      display_name = "User Three"
+      mail_nickname = "user3"
+      user_principal_name = "user3@mydomain.com"
+    },
+  ]
+}
 
 # module "role_assignment_1" {
 #   source = "./modules/azure_azurerm_role_definition"
