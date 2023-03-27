@@ -165,26 +165,47 @@ module "azuread_users" {
 
   users = [
     {
-      username = "user1"
+      username = "avi"
       password = "P@ssw0rd123"
-      display_name = "User One"
-      mail_nickname = "user1"
-      user_principal_name = "user1@mydomain.com"
+      display_name = "Avinash Gopal"
+      mail_nickname = "avi"
+      user_principal_name = "avi@metabob.com"
     },
     {
-      username = "user2"
+      username = "ben"
       password = "P@ssw0rd456"
-      display_name = "User Two"
-      mail_nickname = "user2"
-      user_principal_name = "user2@mydomain.com"
+      display_name = "Ben Reaves"
+      mail_nickname = "ben"
+      user_principal_name = "ben@metabob.com"
     },
     {
-      username = "user3"
+      username = "arj"
       password = "P@ssw0rd789"
-      display_name = "User Three"
-      mail_nickname = "user3"
-      user_principal_name = "user3@mydomain.com"
+      display_name = "Abdur-Rahman Janhangeer"
+      mail_nickname = "arj"
+      user_principal_name = "arj@metabob.com"
     },
+    {
+      username = "anush"
+      password = "P@ssw0rd456"
+      display_name = "Anush Krishna"
+      mail_nickname = "anush"
+      user_principal_name = "anush@metabob.com"
+    },
+    {
+      username = "haoxuan"
+      password = "P@ssw0rd789"
+      display_name = "Haoxuan"
+      mail_nickname = "haoxuan"
+      user_principal_name = "haoxuan@metabob.com"
+    },
+        {
+      username = "junkai"
+      password = "P@ssw0rd789"
+      display_name = "Jun Kai Lo"
+      mail_nickname = "junkai"
+      user_principal_name = "junkai@metabob.com"
+    }
   ]
 }
 
