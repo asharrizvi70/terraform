@@ -188,10 +188,24 @@ module "azuread_users" {
   ]
 }
 
-# module "role_assignment_1" {
-#   source = "./modules/azure_azurerm_role_definition"
+module "role_assignments" {
+  source = "./azurerm_role_assignment"
 
-#   role_scope            = "/subscriptions/<sub_id>/resourceGroups/<rg_name>"
-#   principal_id          = ["<principal_id_1>"]
-#   role_definition_name  = "Contributor"
-# }
+  users = [
+    {
+      name = "User1"
+      role_definition_name = "Contributor"
+      principal_id = "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+    },
+    {
+      name = "User2"
+      role_definition_name = "Reader"
+      principal_id = "yyyyyyyy-yyyy-yyyy-yyyy-yyyyyyyyyyyy"
+    },
+    {
+      name = "User3"
+      role_definition_name = "Owner"
+      principal_id = "zzzzzzzz-zzzz-zzzz-zzzz-zzzzzzzzzzzz"
+    },
+  ]
+}

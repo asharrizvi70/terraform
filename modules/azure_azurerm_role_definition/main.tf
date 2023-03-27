@@ -1,11 +1,19 @@
-resource "azurerm_role_definition" "built_in_role" {
-  name        = var.role_definition_name
-  scope       = var.role_scope
+resource "azurerm_role_assignment" "role_assignments" {
+  for_each = { for user in var.users : user.name => user }
+
+  scope              = "/subscriptions/${data.azurerm_subscription.current.subscription_id}"
+  role_definition_id = data.azurerm_role_definition.role_definitions[each.value.role_definition_name].id
+  principal_id       = each.value.principal_id
+
+  # Optional fields
+  condition = null
+  principal_type = "User"
 }
 
-resource "azurerm_role_assignment" "built_in_role_assignment" {
-  count              = length(var.principal_id)
-  scope              = var.role_scope
-  role_definition_id = azurerm_role_definition.built_in_role.id
-  principal_id       = element(var.principal_id, count.index)
+data "azurerm_role_definition" "role_definitions" {
+  depends_on = [azurerm_resource_group.example]
+
+  scope = "/subscriptions/${data.azurerm_subscription.current.subscription_id}"
 }
+
+data "azurerm_subscription" "current" {}
