@@ -1,7 +1,7 @@
 resource "azurerm_redis_cache" "this" {
   for_each = var.redis_cache_instances
 
-  name                = each.key
+  name                = each.value.name
   resource_group_name = each.value.rgname
   location            = each.value.location
   sku_name            = each.value.sku
