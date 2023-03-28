@@ -84,7 +84,7 @@ module "aks-dev"{
   location = "eastus"
   aksname = "development"
   subnet_id = lookup(module.vnet-dev.subnet_ids, "subnet1-dev")
-  environment = "dev"
+  env = "Development"
 }
 
 module "aks-Integration"{
@@ -99,7 +99,7 @@ module "aks-Integration"{
   default_node_pool_vm_size         = "Standard_D4s_v3"
   default_node_pool_os_disk_size_gb = 50
   subnet_id = lookup(module.vnet-Integration.subnet_ids, "subnet1-integration")
-  environment = "Integration"
+  env = "Integration"
 }
 
 module "aks-Production"{
@@ -114,7 +114,6 @@ module "aks-Production"{
   default_node_pool_vm_size         = "Standard_D4s_v3"
   default_node_pool_os_disk_size_gb = 50
   subnet_id = lookup(module.vnet-Production.subnet_ids, "subnet1-production")
-  environment = "Production"
   additional_node_pools = [
     {
       name            = "standard"
@@ -124,6 +123,7 @@ module "aks-Production"{
       os_disk_size_gb = 128
     }
   ]
+  env = "Production"
 }
 
 module "storage" {
@@ -176,71 +176,72 @@ module "postgresql_server-production" {
 }
 
 
-module "azuread_users" {
-  source = "./modules/azure_aduser"
+# module "azuread_users" {
+#   source = "./modules/azure_aduser"
 
-  users = [
+#   users = [
 
-    {
-      username = "ben"
-      password = "P@ssw0rd456"
-      display_name = "Ben Reaves"
-      mail_nickname = "ben"
-      user_principal_name = "ben@metabob.com"
-    },
-    {
-      username = "arj"
-      password = "P@ssw0rd789"
-      display_name = "Abdur-Rahman Janhangeer"
-      mail_nickname = "arj"
-      user_principal_name = "arj@metabob.com"
-    },
-    {
-      username = "anush"
-      password = "P@ssw0rd456"
-      display_name = "Anush Krishna"
-      mail_nickname = "anush"
-      user_principal_name = "anush@metabob.com"
-    },
-    {
-      username = "haoxuan"
-      password = "P@ssw0rd789"
-      display_name = "Haoxuan"
-      mail_nickname = "haoxuan"
-      user_principal_name = "haoxuan@metabob.com"
-    },
-        {
-      username = "junkai"
-      password = "P@ssw0rd789"
-      display_name = "Jun Kai Lo"
-      mail_nickname = "junkai"
-      user_principal_name = "junkai@metabob.com"
-    }
-  ]
-}
+#     {
+#       username = "ben"
+#       password = "P@ssw0rd456"
+#       display_name = "Ben Reaves"
+#       mail_nickname = "ben"
+#       user_principal_name = "ben@metabob.com"
+#     },
+#     {
+#       username = "arj"
+#       password = "P@ssw0rd789"
+#       display_name = "Abdur-Rahman Janhangeer"
+#       mail_nickname = "arj"
+#       user_principal_name = "arj@metabob.com"
+#     },
+#     {
+#       username = "anush"
+#       password = "P@ssw0rd456"
+#       display_name = "Anush Krishna"
+#       mail_nickname = "anush"
+#       user_principal_name = "anush@metabob.com"
+#     },
+#     {
+#       username = "haoxuan"
+#       password = "P@ssw0rd789"
+#       display_name = "Haoxuan"
+#       mail_nickname = "haoxuan"
+#       user_principal_name = "haoxuan@metabob.com"
+#     },
+#         {
+#       username = "junkai"
+#       password = "P@ssw0rd789"
+#       display_name = "Jun Kai Lo"
+#       mail_nickname = "junkai"
+#       user_principal_name = "junkai@metabob.com"
+#     }
+#   ]
+# }
 
-variable "user_names" {
-  type    = list(string)
-  default = ["Ben Reaves","Abdur-Rahman Janhangeer","Anush Krishna","Haoxuan","Jun Kai Lo"]
-}
+# variable "user_names" {
+#   type    = list(string)
+#   default = ["Ben Reaves","Abdur-Rahman Janhangeer","Anush Krishna","Haoxuan","Jun Kai Lo"]
+# }
 
-module "role_assignments" {
-  source = "./modules/azure_azurerm_role_definition"
-  count = length(var.user_names)
-  users = [
-    { 
-      name = element(var.user_names, count.index)
-      role_definition_name = "Contributor"
-      principal_id = lookup(module.azuread_users.user_ids, element(var.user_names, count.index))
-    }
-  ]
-}
+# module "role_assignments" {
+#   source = "./modules/azure_azurerm_role_definition"
+#   count = length(var.user_names)
+#   users = [
+#     { 
+#       name = element(var.user_names, count.index)
+#       role_definition_name = "Contributor"
+#       principal_id = lookup(module.azuread_users.user_ids, element(var.user_names, count.index))
+#     }
+#   ]
+# }
 
 module "redis_cache_instances" {
   source = "./modules/azure_redis"
 
   redis_cache_instances = {
     cache-instance-dev = {
+      name     = "DevelopmentMetabob"
       sku      = "Basic"
       rgname   = module.Rg-Dev.resource_group_name
       capacity = 1
@@ -248,6 +249,7 @@ module "redis_cache_instances" {
       family   = "C"
     },
     cache-instance-integration = {
+      name     = "IntegrationMetabob"
       sku      = "Basic"
       rgname   = module.Rg-Integration.resource_group_name
       capacity = 1
@@ -255,7 +257,8 @@ module "redis_cache_instances" {
       family   = "C"
     },
     cache-instance-produciton = {
-      sku      = "Basic"
+      name     = "ProductionMetabob"
+      sku      = "Standard"
       rgname   = module.Rg-Production.resource_group_name
       capacity = 1
       location = "eastus"
@@ -263,9 +266,3 @@ module "redis_cache_instances" {
     }        
   }
 }
-
-# module "istio_installation" {
-#   source              = "./modules/azure_aks_istio"
-#   cluster_name        = module.aks-dev.aks_cluster_name
-#   istio_chart_version = "1.16.1"
-# }

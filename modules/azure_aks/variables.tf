@@ -3,6 +3,12 @@ variable "rgname" {
   type    = string
   default = "RG-git-DEMO-LINUXVM"
 }
+
+variable "env" {
+  type    = string
+  default = "Development"
+}
+
 variable "noderg" {
   type    = string
   default = "RG-git-DEMO-LINUXVM"
@@ -55,8 +61,4 @@ variable "additional_node_pools" {
     vnet_subnet_id      = string
   }))
   default = []
-}
-
-variable "environment" {
-  type    = string
 }

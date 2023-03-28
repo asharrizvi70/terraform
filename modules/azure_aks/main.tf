@@ -9,7 +9,7 @@ resource "azurerm_kubernetes_cluster" "aks" {
     type = "SystemAssigned"
   }
   tags = {
-    environment = var.environment
+    environment = var.env
   }
   default_node_pool {
     name            = var.default_node_pool_name
@@ -30,8 +30,4 @@ resource "azurerm_kubernetes_cluster_node_pool" "additional_node_pools" {
   vm_size             = var.additional_node_pools[count.index].vm_size
   vnet_subnet_id      = var.additional_node_pools[count.index].vnet_subnet_id
   os_disk_size_gb     = var.additional_node_pools[count.index].os_disk_size_gb
-}
-
-output "aks_cluster_name" {
-  value = azurerm_kubernetes_cluster.aks.name
 }
