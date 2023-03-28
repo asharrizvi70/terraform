@@ -3,6 +3,10 @@ variable "rgname" {
   type    = string
   default = "RG-git-DEMO-LINUXVM"
 }
+variable "noderg" {
+  type    = string
+  default = "RG-git-DEMO-LINUXVM"
+}
 
 variable "vnetname" {
   type    = string
