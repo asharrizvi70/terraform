@@ -9,7 +9,7 @@ resource "azurerm_kubernetes_cluster" "aks" {
     type = "SystemAssigned"
   }
   tags = {
-    environment = "dev"
+    environment = var.environment
   }
   default_node_pool {
     name            = var.default_node_pool_name

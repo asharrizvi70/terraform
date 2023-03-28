@@ -56,3 +56,7 @@ variable "additional_node_pools" {
   }))
   default = []
 }
+
+variable "environment" {
+  type    = string
+}

@@ -26,6 +26,12 @@ module "Rg-Production" {
   location = "eastus"
 }
 
+module "Rg-Storage" {
+  source = "./modules/azure_resource_group"
+  rgname   = "Rg-Storage"
+  location = "eastus"
+}
+
 
 module "vnet-dev"{
   source = "./modules/azure_vnet"
@@ -78,6 +84,7 @@ module "aks-dev"{
   location = "eastus"
   aksname = "development"
   subnet_id = lookup(module.vnet-dev.subnet_ids, "subnet1-dev")
+  environment = "dev"
 }
 
 module "aks-Integration"{
@@ -92,6 +99,7 @@ module "aks-Integration"{
   default_node_pool_vm_size         = "Standard_D4s_v3"
   default_node_pool_os_disk_size_gb = 50
   subnet_id = lookup(module.vnet-Integration.subnet_ids, "subnet1-integration")
+  environment = "Integration"
 }
 
 module "aks-Production"{
@@ -106,6 +114,7 @@ module "aks-Production"{
   default_node_pool_vm_size         = "Standard_D4s_v3"
   default_node_pool_os_disk_size_gb = 50
   subnet_id = lookup(module.vnet-Production.subnet_ids, "subnet1-production")
+  environment = "Production"
   additional_node_pools = [
     {
       name            = "standard"
@@ -119,7 +128,7 @@ module "aks-Production"{
 
 module "storage" {
   source = "./modules/azure_storage"
-  rgname = module.Rg-Dev.resource_group_name
+  rgname = module.Rg-Storage.resource_group_name
   location = "eastus"
   storage_account_names = [
     "temppublicshare",
@@ -225,4 +234,32 @@ module "role_assignments" {
       principal_id = lookup(module.azuread_users.user_ids, element(var.user_names, count.index))
     }
   ]
+}
+
+module "redis_cache_instances" {
+  source = "./modules/azure_redis"
+
+  redis_cache_instances = {
+    cache-instance-dev = {
+      sku      = "Basic"
+      rgname   = module.Rg-Dev.resource_group_name
+      capacity = 1
+      location = "eastus"
+      family   = "C"
+    },
+    cache-instance-integration = {
+      sku      = "Basic"
+      rgname   = module.Rg-Integration.resource_group_name
+      capacity = 1
+      location = "eastus"
+      family   = "C"
+    },
+    cache-instance-produciton = {
+      sku      = "Basic"
+      rgname   = module.Rg-Production.resource_group_name
+      capacity = 1
+      location = "eastus"
+      family   = "C"
+    }        
+  }
 }
