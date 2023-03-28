@@ -3,8 +3,8 @@ resource "azurerm_kubernetes_cluster" "aks" {
   location            = var.location
   resource_group_name = var.rgname
   dns_prefix          = "myaks"
-  kubernetes_version  = "1.22.1"
-  node_resource_group = "aks-node-rg"
+  kubernetes_version  = "1.24.9"
+  node_resource_group = var.noderg
   identity {
     type = "SystemAssigned"
   }

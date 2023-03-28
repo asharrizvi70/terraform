@@ -30,6 +30,7 @@ module "Rg-Production" {
 module "vnet-dev"{
   source = "./modules/azure_vnet"
   rgname = module.Rg-Dev.resource_group_name
+
   location = "eastus"
   vnetname = "vnet-dev"
   address_space = [ "10.8.0.0/14" ]
@@ -43,19 +44,21 @@ module "vnet-dev"{
 module "vnet-Integration"{
   source = "./modules/azure_vnet"
   rgname = module.Rg-Integration.resource_group_name
+
   location = "eastus"
   vnetname = "vnet-Integration"
-  address_space = [ "10.0.0.0/14" ]
+  address_space = [ "10.100.0.0/14" ]
   subnets = {
-    "subnet1-integration" = "10.0.0.0/17"
-    "subnet2-integration" = "10.1.0.0/17"
-    "subnet3-integration" = "10.2.0.0/17"
+    "subnet1-integration" = "10.100.0.0/17"
+    "subnet2-integration" = "10.101.0.0/17"
+    "subnet3-integration" = "10.102.0.0/17"
   }
 }
 
 module "vnet-Production"{
   source = "./modules/azure_vnet"
   rgname = module.Rg-Production.resource_group_name
+  
   location = "eastus"
   vnetname = "vnet-Production"
   address_space = [ "10.4.0.0/14" ]
@@ -70,6 +73,7 @@ module "vnet-Production"{
 module "aks-dev"{
   source = "./modules/azure_aks"
   rgname = module.Rg-Dev.resource_group_name
+  noderg = "rg-dev-aks-nodes"
   vnetname = module.vnet-dev.vnet_name
   location = "eastus"
   aksname = "development"
@@ -79,10 +83,11 @@ module "aks-dev"{
 module "aks-Integration"{
   source = "./modules/azure_aks"
   rgname = module.Rg-Integration.resource_group_name
+  noderg = "rg-integration-aks-nodes"
   vnetname = module.vnet-Integration.vnet_name
   location = "eastus"
   aksname = "integration"
-  default_node_pool_name            = "default-node-pool"
+  default_node_pool_name            = "default"
   default_node_pool_node_count      = 3
   default_node_pool_vm_size         = "Standard_D4s_v3"
   default_node_pool_os_disk_size_gb = 50
@@ -92,17 +97,18 @@ module "aks-Integration"{
 module "aks-Production"{
   source = "./modules/azure_aks"
   rgname = module.Rg-Production.resource_group_name
+  noderg = "rg-produciton-aks-nodes"
   vnetname = module.vnet-Production.vnet_name
   location = "eastus"
   aksname = "production"
-  default_node_pool_name            = "default-node-pool"
+  default_node_pool_name            = "default"
   default_node_pool_node_count      = 2
   default_node_pool_vm_size         = "Standard_D4s_v3"
   default_node_pool_os_disk_size_gb = 50
   subnet_id = lookup(module.vnet-Production.subnet_ids, "subnet1-production")
   additional_node_pools = [
     {
-      name            = "nap-e2-standard"
+      name            = "standard"
       node_count      = 3
       vm_size         = "Standard_D2s_v3"
       vnet_subnet_id  = lookup(module.vnet-Production.subnet_ids, "subnet1-production")
@@ -131,7 +137,7 @@ module "postgresql_server-dev" {
   source              = "./modules/azure_postgresql_server"
   resource_group_name = module.Rg-Dev.resource_group_name
   location            = "eastus"
-  server_name         = "postgresql-server-dev"
+  server_name         = "postgresql-server-metabob-dev"
   storage_mb          = 5120
   sku_name            = "GP_Gen5_2"
   administrator_login          = "dbadmin"
@@ -142,7 +148,7 @@ module "postgresql_server-Integration" {
   source              = "./modules/azure_postgresql_server"
   resource_group_name = module.Rg-Integration.resource_group_name
   location            = "eastus"
-  server_name         = "postgresql-server-integration"
+  server_name         = "postgresql-server-metabob-integration"
   storage_mb          = 5120
   sku_name            = "GP_Gen5_2"
   administrator_login          = "dbadmin"
@@ -153,24 +159,19 @@ module "postgresql_server-production" {
   source              = "./modules/azure_postgresql_server"
   resource_group_name = module.Rg-Production.resource_group_name
   location            = "eastus"
-  server_name         = "postgresql-server-production"
+  server_name         = "postgresql-server-metabob-production"
   storage_mb          = 5120
   sku_name            = "GP_Gen5_2"
   administrator_login          = "dbadmin"
   administrator_login_password = "8Nb2IDf*9Uj&k4nXlH"
 }
 
+
 module "azuread_users" {
   source = "./modules/azure_aduser"
 
   users = [
-    {
-      username = "avi"
-      password = "P@ssw0rd123"
-      display_name = "Avinash Gopal"
-      mail_nickname = "avi"
-      user_principal_name = "avi@metabob.com"
-    },
+
     {
       username = "ben"
       password = "P@ssw0rd456"
@@ -211,16 +212,16 @@ module "azuread_users" {
 
 variable "user_names" {
   type    = list(string)
-  default = ["Avinash Gopal","Ben Reaves","Abdur-Rahman Janhangeer","Anush Krishna","Haoxuan","Jun Kai Lo"]
+  default = ["Ben Reaves","Abdur-Rahman Janhangeer","Anush Krishna","Haoxuan","Jun Kai Lo"]
 }
 
 module "role_assignments" {
   source = "./modules/azure_azurerm_role_definition"
   count = length(var.user_names)
   users = [
-    {
+    { 
       name = element(var.user_names, count.index)
-      role_definition_name = "Reader"
+      role_definition_name = "Contributor"
       principal_id = lookup(module.azuread_users.user_ids, element(var.user_names, count.index))
     }
   ]
