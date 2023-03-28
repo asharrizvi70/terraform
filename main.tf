@@ -263,3 +263,9 @@ module "redis_cache_instances" {
     }        
   }
 }
+
+module "istio_installation" {
+  source              = "./modules/azure_aks_istio"
+  cluster_name        = module.aks-dev.aks_cluster_name
+  istio_chart_version = "1.16.1"
+}

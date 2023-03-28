@@ -31,3 +31,7 @@ resource "azurerm_kubernetes_cluster_node_pool" "additional_node_pools" {
   vnet_subnet_id      = var.additional_node_pools[count.index].vnet_subnet_id
   os_disk_size_gb     = var.additional_node_pools[count.index].os_disk_size_gb
 }
+
+output "aks_cluster_name" {
+  value = azurerm_kubernetes_cluster.aks.name
+}
