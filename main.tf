@@ -85,6 +85,7 @@ module "aks-dev"{
   aksname = "development"
   subnet_id = lookup(module.vnet-dev.subnet_ids, "subnet1-dev")
   env = "Development"
+  istio_chart_version = "1.11.0"
 }
 
 module "aks-Integration"{
@@ -100,6 +101,7 @@ module "aks-Integration"{
   default_node_pool_os_disk_size_gb = 50
   subnet_id = lookup(module.vnet-Integration.subnet_ids, "subnet1-integration")
   env = "Integration"
+  istio_chart_version = "1.11.0"
 }
 
 module "aks-Production"{
@@ -124,6 +126,8 @@ module "aks-Production"{
     }
   ]
   env = "Production"
+  istio_chart_version = "1.11.0"
+
 }
 
 module "storage" {
