@@ -85,7 +85,6 @@ module "aks-dev"{
   aksname = "development"
   subnet_id = lookup(module.vnet-dev.subnet_ids, "subnet1-dev")
   env = "Development"
-  istio_chart_version = "1.11.0"
 }
 
 module "aks-Integration"{
@@ -100,9 +99,24 @@ module "aks-Integration"{
   default_node_pool_vm_size         = "Standard_D4s_v3"
   default_node_pool_os_disk_size_gb = 50
   subnet_id = lookup(module.vnet-Integration.subnet_ids, "subnet1-integration")
+  additional_node_pools = [
+    {
+      name            = "standard1"
+      node_count      = 3
+      vm_size         = "Standard_NV6"
+      vnet_subnet_id  = lookup(module.vnet-Production.subnet_ids, "subnet1-integration")
+      os_disk_size_gb = 128
+    },
+    {
+      name            = "standard2"
+      node_count      = 3
+      vm_size         = "Standard_NV6"
+      vnet_subnet_id  = lookup(module.vnet-Production.subnet_ids, "subnet1-integration")
+      os_disk_size_gb = 128
+    }    
+  ]
   env = "Integration"
-  istio_chart_version = "1.11.0"
-}
+  }
 
 module "aks-Production"{
   source = "./modules/azure_aks"
@@ -126,8 +140,6 @@ module "aks-Production"{
     }
   ]
   env = "Production"
-  istio_chart_version = "1.11.0"
-
 }
 
 module "storage" {
