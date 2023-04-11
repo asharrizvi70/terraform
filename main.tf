@@ -166,7 +166,7 @@ module "postgresql_server-dev" {
   storage_mb          = 5120
   sku_name            = "GP_Gen5_2"
   administrator_login          = "dbadmin"
-  administrator_login_password = "f1TTh4vs&F2SPH6q3l"
+  administrator_login_password = ""
 }
 
 module "postgresql_server-Integration" {
@@ -177,7 +177,7 @@ module "postgresql_server-Integration" {
   storage_mb          = 5120
   sku_name            = "GP_Gen5_2"
   administrator_login          = "dbadmin"
-  administrator_login_password = "%M6dXUZ5sU1N872wdW"
+  administrator_login_password = ""
 }
 
 module "postgresql_server-production" {
@@ -188,69 +188,10 @@ module "postgresql_server-production" {
   storage_mb          = 5120
   sku_name            = "GP_Gen5_2"
   administrator_login          = "dbadmin"
-  administrator_login_password = "8Nb2IDf*9Uj&k4nXlH"
+  administrator_login_password = ""
 }
 
 
-# module "azuread_users" {
-#   source = "./modules/azure_aduser"
-
-#   users = [
-
-#     {
-#       username = "ben"
-#       password = "P@ssw0rd456"
-#       display_name = "Ben Reaves"
-#       mail_nickname = "ben"
-#       user_principal_name = "ben@metabob.com"
-#     },
-#     {
-#       username = "arj"
-#       password = "P@ssw0rd789"
-#       display_name = "Abdur-Rahman Janhangeer"
-#       mail_nickname = "arj"
-#       user_principal_name = "arj@metabob.com"
-#     },
-#     {
-#       username = "anush"
-#       password = "P@ssw0rd456"
-#       display_name = "Anush Krishna"
-#       mail_nickname = "anush"
-#       user_principal_name = "anush@metabob.com"
-#     },
-#     {
-#       username = "haoxuan"
-#       password = "P@ssw0rd789"
-#       display_name = "Haoxuan"
-#       mail_nickname = "haoxuan"
-#       user_principal_name = "haoxuan@metabob.com"
-#     },
-#         {
-#       username = "junkai"
-#       password = "P@ssw0rd789"
-#       display_name = "Jun Kai Lo"
-#       mail_nickname = "junkai"
-#       user_principal_name = "junkai@metabob.com"
-#     }
-#   ]
-# }
-
-# variable "user_names" {
-#   type    = list(string)
-#   default = ["Ben Reaves","Abdur-Rahman Janhangeer","Anush Krishna","Haoxuan","Jun Kai Lo"]
-# }
-
-# module "role_assignments" {
-#   source = "./modules/azure_azurerm_role_definition"
-#   count = length(var.user_names)
-#   users = [
-#     { 
-#       name = element(var.user_names, count.index)
-#       role_definition_name = "Contributor"
-#       principal_id = lookup(module.azuread_users.user_ids, element(var.user_names, count.index))
-#     }
-#   ]
-# }
 
 module "redis_cache_instances" {
   source = "./modules/azure_redis"
